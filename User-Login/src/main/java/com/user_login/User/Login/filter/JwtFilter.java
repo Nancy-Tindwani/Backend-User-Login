@@ -28,6 +28,7 @@ public class JwtFilter extends OncePerRequestFilter {
     private final AppUserServiceDetails appUserServiceDetails;
     private static final List<String> PUBLIC_URLS=List.of("/login","/register","/reset-password","/logout");
 
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
     String path=request.getServletPath();
