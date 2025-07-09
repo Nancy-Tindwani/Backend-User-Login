@@ -55,10 +55,10 @@ public class SecurityConfig {
     public CorsFilter corsFilter() {
         return new CorsFilter(corsConfigurationSource());
     }*/
-
-    private CorsConfigurationSource corsConfigurationSource() {
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration config = new CorsConfiguration();
-    config.setAllowedOrigins(List.of("http://localhost:3030"));
+    config.setAllowedOrigins(List.of("http://localhost:3000"));
     config.setAllowedMethods(List.of("GET","POST","PUT","DELETE","OPTIONS"));
     config.setAllowedHeaders(List.of("Authorization","Cache-Control","Content-Type"));
     config.setAllowCredentials(true);
