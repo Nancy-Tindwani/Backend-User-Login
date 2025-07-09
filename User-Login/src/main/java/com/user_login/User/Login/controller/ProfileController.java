@@ -2,6 +2,7 @@ package com.user_login.User.Login.controller;
 
 import com.user_login.User.Login.io.ProfileRequest;
 import com.user_login.User.Login.io.ProfileResponse;
+import com.user_login.User.Login.service.EmailService;
 import com.user_login.User.Login.service.ProfileService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,11 +19,15 @@ public class ProfileController {
 
     @Autowired
     private ProfileService profileService;
+    @Autowired
+    private EmailService emailService;
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public ProfileResponse registerUser(@Valid @RequestBody ProfileRequest profileRequest) {
-        return profileService.createProfile(profileRequest);
+        ProfileResponse res=profileService.createProfile(profileRequest);
+         emailService.sendEmail(res.getEmail(),res.getName());
+        return res;
     }
 
     /*@GetMapping("/test")

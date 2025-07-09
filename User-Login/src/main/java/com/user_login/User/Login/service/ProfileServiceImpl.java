@@ -41,6 +41,22 @@ public ProfileResponse getProfile(String email)
     return convertToProfileResponse(existingUser);
 }
 
+    @Override
+    public void resetPassword(String email,String newPassword) {
+        UserEntity existingUser=userRepository.findByEmail(email).orElseThrow(()->new UsernameNotFoundException("User not found"));
+        if (newPassword!=null) {
+            existingUser.setPassword(passwordEncoder.encode(newPassword));
+        }
+        userRepository.save(existingUser);
+    }
+
+    @Override
+    public String getLoggedInUserName(String email) {
+    UserEntity existingUser=userRepository.findByEmail(email).orElseThrow(()->new UsernameNotFoundException("User not found"));
+        return existingUser.getUsername();
+    }
+
+
     private ProfileResponse convertToProfileResponse(UserEntity userEntity) {
 
     return ProfileResponse.builder().
