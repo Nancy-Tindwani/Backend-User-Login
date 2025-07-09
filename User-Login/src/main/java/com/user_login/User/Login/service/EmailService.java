@@ -15,12 +15,12 @@ public class EmailService {
     @Value("${spring.mail.properties.mail.smtp.from}")
     private String fromEmail;
 
-    public void sendEmail(String to, String subject, String message) {
+    public void sendEmail(String toEmail, String Name) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setFrom(fromEmail);
-        mailMessage.setTo(to);
-        mailMessage.setSubject(subject);
-        mailMessage.setText(message);
+        mailMessage.setTo(toEmail);
+        mailMessage.setSubject("Welcome Email");
+        mailMessage.setText("HELLO"+Name+"THIS THE WELCOME EMAIL");
         mailSender.send(mailMessage);
     }
 }

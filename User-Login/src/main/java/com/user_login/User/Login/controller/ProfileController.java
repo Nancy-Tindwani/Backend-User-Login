@@ -26,7 +26,7 @@ public class ProfileController {
     @ResponseStatus(HttpStatus.CREATED)
     public ProfileResponse registerUser(@Valid @RequestBody ProfileRequest profileRequest) {
         ProfileResponse res=profileService.createProfile(profileRequest);
-        //emailService.sendEmail(res.getEmail(),"WELCOME","Hi" +res.getName()+"WELCOME TO YOUR Platform");
+         emailService.sendEmail(res.getEmail(),res.getName());
         return res;
     }
 

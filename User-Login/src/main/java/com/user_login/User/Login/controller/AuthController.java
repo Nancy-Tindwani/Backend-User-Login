@@ -2,7 +2,10 @@ package com.user_login.User.Login.controller;
 
 import com.user_login.User.Login.io.AuthRequest;
 import com.user_login.User.Login.io.AuthResponse;
+import com.user_login.User.Login.io.ResetPasswordRequest;
+import com.user_login.User.Login.service.ProfileService;
 import com.user_login.User.Login.util.JwtUtil;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -12,12 +15,14 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Duration;
 import java.util.HashMap;
@@ -30,6 +35,7 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
     private final JwtUtil jwtUtil;
+    private final ProfileService profileService;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthRequest authRequest) {
@@ -65,5 +71,21 @@ public class AuthController {
 
     private void authenticate(String email, String password) {
     authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
+    }
+
+    @GetMapping("/is-authenticated")
+    public ResponseEntity<Boolean> isAuthenticated(@CurrentSecurityContext(expression = "authentication?.name") String email) {
+
+        return ResponseEntity.ok(email!=null);
+    }
+
+    @PostMapping("/reset-password")
+    public void resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+        try{
+            profileService.resetPassword(request.getEmail(),request.getNewPassword());
+        }
+        catch (Exception ex){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,ex.getMessage());
+        }
     }
 }
